@@ -1,33 +1,43 @@
-function batteryIsOk(temperature,  soc,  chargeRate) {
-    if(temperature < 0 || temperature > 45) {
-        console.log("Temperature is out of range!");
-        return false;
-    } else if(soc < 20 || soc > 80) {
-        console.log("State of Charge is out of range!");
-        return false;
-    } else if(chargeRate > 0.8) {
-        console.log("Charge Rate is out of range!");
-        return false;
+function batteryIsOk(temperature, soc, chargeRate) {
+    const checks = [
+        { condition: temperature < 0 || temperature > 45, message: "Temperature is out of range!" },
+        { condition: soc < 20 || soc > 80, message: "State of Charge is out of range!" },
+        { condition: chargeRate > 0.8, message: "Charge Rate is out of range!" }
+    ];
+
+    for (let check of checks) {
+        if (check.condition) {
+            return { status: false, message: check.message };
+        }
     }
-    return true;
+
+    return { status: true, message: "Battery is OK" };
 }
 
-function  ExpectTrue(expression) {
-    if(!expression) {
-        console.log("Expected true, but got false");
-        
+function expectTrue(result) {
+    if (!result.status) {
+        return `Expected true, but got false: ${result.message}`;
     }
+    return "Test passed";
 }
-function ExpectFalse(expression) {
-    if(expression) {
-        console.log("Expected false, but got true");
-        Environment.Exit(1);
+
+function expectFalse(result) {
+    if (result.status) {
+        return `Expected false, but got true: ${result.message}`;
     }
+    return "Test passed";
 }
+
 function main() {
-    ExpectTrue(batteryIsOk(25, 70, 0.7));
-    ExpectFalse(batteryIsOk(50, 85, 0.0));
-    console.log("All ok");
+    let results = [];
+    results.push(expectTrue(batteryIsOk(25, 70, 0.7)));
+    results.push(expectFalse(batteryIsOk(50, 85, 0.0)));
+
+    results.forEach(result => {
+        console.log(result);
+    });
+
+    console.log("All tests completed");
     return 0;
 }
 
