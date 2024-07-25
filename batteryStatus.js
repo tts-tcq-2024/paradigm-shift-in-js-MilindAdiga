@@ -27,12 +27,12 @@ function checkSoc(soc) {
 }
 
 function checkChargeRate(chargeRate) {
-    if (chargeRate > 0.8) {
+    if (chargeRate >= 0.8 - CHARGE_RATE_WARNING_THRESHOLD) {
+        console.log("Warning: Charge rate approaching upper limit");
+    }  else if (chargeRate > 0.8) {
         console.log("Charge Rate is out of range!");
         return false;
-    } else if (chargeRate >= 0.8 - CHARGE_RATE_WARNING_THRESHOLD) {
-        console.log("Warning: Charge rate approaching upper limit");
-    }
+    } 
     return true;
 }
 
